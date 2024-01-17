@@ -1,12 +1,10 @@
-package main
+package utils
 
 import (
 	"fmt"
 	"encoding/json"
 	"net/http"
 	"net/url"
-
-	"github.com/ChiHaoLu/EVM-Asset-Tracer/utils"
 )
 
 type CoinGeckoQuote struct {
@@ -45,7 +43,7 @@ func Quote(apiUrl string, targetToken string) (float64, error) {
 		panic(err)
 	}
 
-	results := utils.Filter(quotes, func(q CoinGeckoQuote) bool {
+	results := Filter(quotes, func(q CoinGeckoQuote) bool {
 		return q.ID == base
 	})
 	if len(results) == 0 {

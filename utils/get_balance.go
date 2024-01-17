@@ -1,7 +1,6 @@
-package main
+package utils
 
 import (
-	"context"
 	"math"
 	"math/big"
 	"strconv"
@@ -12,13 +11,15 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-func GetETHBalance(client *ethclient.Client, account common.Address) (*big.Float, error) {
-	balance, err := client.BalanceAt(context.Background(), account, nil)
-	if err != nil {
+func GetNativeTokenBalance(client *ethclient.Client, account common.Address) (*big.Float, error) {
+	rpcclient := client.Client()
+
+	var result string
+	if err := rpcclient.Call(&result, "eth_getBalance", account, "latest"); err != nil {
 		return nil, err
 	}
 	fbalance := new(big.Float)
-	fbalance.SetString(balance.String())
+	fbalance.SetString(result)
 	ethValue := new(big.Float).Quo(fbalance, big.NewFloat(math.Pow10(18)))
 
 	return ethValue, nil

@@ -15,13 +15,17 @@
 
 ### Token
 
-- USDT
-- USDC
-- DAI
-- OP
-- ARB
-- MATIC
-- BNB
+- Native Token
+      - ETH
+      - OP
+      - ARB
+      - MATIC
+      - BNB
+- ERC-20
+      - WETH
+      - USDT
+      - USDC
+      - DAI
 
 ## Run
 
@@ -96,7 +100,11 @@ SOLC_VERSION=0.4.17 solc --bin TetherToken.sol --out bin
 abigen --bin=bin/TetherToken.bin --abi=build/TetherToken.abi --pkg=usdt --out=usdt.go --alias _totalSupply=TotalSupply1
 ```
 
+Run below commands to get the accounts' total balance
 ```
 $ go mod download
 $ go run *.go
 ```
+
+## Appendic
+1. `eth_getBalance` only returns the balance of the native chain currency (ex: ETH for Ethereum or Matic for Polygon) and does not include any ERC20 token balances for the given address. [ref.](https://docs.alchemy.com/reference/eth-getbalance-polygon)

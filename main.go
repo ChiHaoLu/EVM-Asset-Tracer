@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/big"
 	"os"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -35,7 +36,7 @@ func main() {
 	}
 
 	for i := 0; i < len(data.Chain); i++ {
-		chainName, err := utils.ExtractNetworkName(data.Chain[i])
+		chainName, nativeTokenName, wethAddr, err := utils.ExtractNetwork(data.Chain[i])
 		fmt.Println("Chain: ", chainName)
 		if err != nil {
 			log.Fatal(err)
@@ -51,25 +52,39 @@ func main() {
 			account := common.HexToAddress(data.Address[j])
 			fmt.Println("    Account: ", account)
 
-			ethBal, err := GetETHBalance(client, account)
+			totalBal := new(big.Float)
+
+			ethBal, err := utils.GetNativeTokenBalance(client, account)
 			if err == nil {
-				fmt.Println("	- ETH Balance:", ethBal)
+				fmt.Printf("	- %s Balance: %f\n", nativeTokenName, ethBal)
+				totalBal.Add(totalBal, ethBal)
 			}
 
-			usdtBal, err := GetTokenBalance(client, account, "0xdAC17F958D2ee523a2206206994597C13D831ec7")
+			wethBal, err := utils.GetTokenBalance(client, account, wethAddr)
+			if err == nil {
+				fmt.Println("	- WETH Balance:", wethBal)
+				totalBal.Add(totalBal, wethBal)
+			}
+
+			usdtBal, err := utils.GetTokenBalance(client, account, "0xdAC17F958D2ee523a2206206994597C13D831ec7")
 			if err == nil {
 				fmt.Println("	- USDT Balance:", usdtBal)
+				totalBal.Add(totalBal, usdtBal)
 			}
 
-			daiBal, err := GetTokenBalance(client, account, "0x6B175474E89094C44Da98b954EedeAC495271d0F")
+			daiBal, err := utils.GetTokenBalance(client, account, "0x6B175474E89094C44Da98b954EedeAC495271d0F")
 			if err == nil {
 				fmt.Println("	- DAI Balance:", daiBal)
+				totalBal.Add(totalBal, daiBal)
 			}
 
-			usdcBal, err := GetTokenBalance(client, account, "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48")
+			usdcBal, err := utils.GetTokenBalance(client, account, "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48")
 			if err == nil {
 				fmt.Println("	- USDC Balance:", usdcBal)
+				totalBal.Add(totalBal, usdcBal)
 			}
+
+			fmt.Println("	- Total Balance:", totalBal)
 		}
 		fmt.Printf("\n")
 	}
