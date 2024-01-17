@@ -1,6 +1,6 @@
 {
     "address": [
-        "chihaolu.me"
+        "0x2b83c71a59b926137d3e1f37ef20394d0495d72d"
     ],
     "chain": [
         "https://mainnet.infura.io/v3/",
@@ -8,14 +8,5 @@
         "https://optimism-mainnet.infura.io/v3/",
         "https://arbitrum-mainnet.infura.io/v3/",
         "https://bnbsmartchain-mainnet.infura.io/v3/"
-    ],
-    "token": [
-        "USDT",
-        "USDC",
-        "DAI",
-        "OP",
-        "ARB",
-        "MATIC",
-        "BNB"
     ]
 }

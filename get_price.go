@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/url"
 
-
 	"github.com/ChiHaoLu/EVM-Asset-Tracer/utils"
 )
 
