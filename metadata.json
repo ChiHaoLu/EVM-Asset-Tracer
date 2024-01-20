@@ -1,12 +1,13 @@
 {
     "address": [
-        "0x2b83c71a59b926137d3e1f37ef20394d0495d72d"
+        "0x2b83c71a59b926137d3e1f37ef20394d0495d72d",
+        "0x189C92f28047c979cA2D17C13e3A12963EB1b8B4"
     ],
     "chain": [
         "https://mainnet.infura.io/v3/",
         "https://polygon-mainnet.infura.io/v3/",
         "https://optimism-mainnet.infura.io/v3/",
         "https://arbitrum-mainnet.infura.io/v3/",
-        "https://bnbsmartchain-mainnet.infura.io/v3/"
+        "https://bsc-dataseed.binance.org/"
     ]
 }

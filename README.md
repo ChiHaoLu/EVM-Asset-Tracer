@@ -16,16 +16,16 @@
 ### Token
 
 - Native Token
-      - ETH
-      - OP
-      - ARB
-      - MATIC
-      - BNB
+  - ETH
+  - OP
+  - ARB
+  - MATIC
+  - BNB
 - ERC-20
-      - WETH
-      - USDT
-      - USDC
-      - DAI
+  - WETH
+  - USDT
+  - USDC
+  - DAI
 
 ## Run
 
@@ -105,6 +105,11 @@ Run below commands to get the accounts' total balance
 $ go mod download
 $ go run *.go
 ```
+
+## TODO
+
+- Integrate Docker
+- Can use prompt to give address
 
 ## Appendic
 1. `eth_getBalance` only returns the balance of the native chain currency (ex: ETH for Ethereum or Matic for Polygon) and does not include any ERC20 token balances for the given address. [ref.](https://docs.alchemy.com/reference/eth-getbalance-polygon)

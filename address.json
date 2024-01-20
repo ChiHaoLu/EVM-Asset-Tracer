@@ -1,0 +1,16 @@
+{
+    "WETH": {
+        "mainnet": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "polygon": "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+        "optimism": "0x4200000000000000000000000000000000000006",
+        "arbitrum": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+        "bnbsmartchain": "0x4DB5a66E937A9F4473fA95b1cAF1d1E1D62E29EA"
+    },
+    "ARB": {
+        "mainnet": "0xB50721BCf8d664c30412Cfbc6cf7a15145234ad1",
+        "arbitrum": "0x912CE59144191C1204E64559FE8253a0e49E6548"
+    },
+    "OP": {
+        "optimism": "0x4200000000000000000000000000000000000042"
+    }
+}
