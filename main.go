@@ -47,16 +47,30 @@ func main() {
 	writer.WriteString("|-------|---------|-------------|--------------|--------------|-------------|---------------|-------------|---------------|\n")
 
 	allValue := new(big.Float)
+
+	ethPrice, err := pkg.Quote("ETH", "USD")
+	if err != nil {
+		panic(err)
+	}
+	usdcPrice, err := pkg.Quote("USDC", "USD")
+	if err != nil {
+		panic(err)
+	}
+	usdtPrice, err := pkg.Quote("USDT", "USD")
+	if err != nil {
+		panic(err)
+	}
+	daiPrice, err := pkg.Quote("DAI", "USD")
+	if err != nil {
+		panic(err)
+	}
+
 	for i := 0; i < len(data.Chain); i++ {
 		chainValue := new(big.Float)
 		chainName, nativeTokenName, err := pkg.ExtractNetwork(data.Chain[i])
 		fmt.Println("Chain: ", chainName)
 		if err != nil {
 			log.Fatal(err)
-		}
-
-		if chainName != "starknet" {
-			continue
 		}
 		if chainName == "starknet" {
 			url := data.Chain[i] + os.Getenv("API_KEY")
@@ -69,26 +83,18 @@ func main() {
 				fmt.Println("    Account: ", account)
 				nativeBal, err := pkg.GetSNTokenBalanceAndValue(url, "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7", account, "balanceOf")
 				if err == nil {
-					nativePrice, err := pkg.Quote(nativeTokenName, "USD")
-					if err != nil {
-						panic(err)
-					}
-					nativeValue := new(big.Float).Mul(big.NewFloat(nativePrice), nativeBal)
+					nativeValue := new(big.Float).Mul(big.NewFloat(ethPrice), nativeBal)
 					addressValue = new(big.Float).Add(addressValue, nativeValue)
 					fmt.Printf("	- %s Balance: %f    -> Value: %f\n", nativeTokenName, nativeBal, nativeValue)
 				}
 
 				usdcBal, err := pkg.GetSNTokenBalanceAndValue(url, "0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8", account, "balanceOf")
 				if err == nil {
-					usdcPrice, err := pkg.Quote("USDC", "USD")
-					if err != nil {
-						panic(err)
-					}
 					usdcValue := new(big.Float).Mul(big.NewFloat(usdcPrice), usdcBal)
 					addressValue = new(big.Float).Add(addressValue, usdcValue)
 					fmt.Printf("	- USDC Balance: %f    -> Value: %f\n", usdcBal, usdcValue)
 				}
-				
+
 				// DAI "0x00da114221cb83fa859dbdb4c44beeaa0bb37c7537ad5ae66fe5e0efd20e6eb3"
 				chainValue = new(big.Float).Add(addressValue, chainValue)
 			}
@@ -119,7 +125,12 @@ func main() {
 
 			nativeBal, err := pkg.GetNativeTokenBalance(client, account)
 			if err == nil {
-				nativePrice, err := pkg.Quote(nativeTokenName, "USD")
+				var nativePrice float64
+				if nativeTokenName == "ETH" {
+					nativePrice = ethPrice
+				} else{
+					nativePrice, err = pkg.Quote(nativeTokenName, "USD")
+				}
 				if err != nil {
 					panic(err)
 				}
@@ -130,10 +141,6 @@ func main() {
 
 			usdtBal, err := pkg.GetTokenBalance(client, account, "0xdAC17F958D2ee523a2206206994597C13D831ec7")
 			if err == nil {
-				usdtPrice, err := pkg.Quote("USDT", "USD")
-				if err != nil {
-					panic(err)
-				}
 				usdtValue := new(big.Float).Mul(big.NewFloat(usdtPrice), usdtBal)
 				addressValue = new(big.Float).Add(addressValue, usdtValue)
 				fmt.Printf("	- USDT Balance: %f    -> Value: %f\n", usdtBal, usdtValue)
@@ -141,10 +148,6 @@ func main() {
 
 			usdcBal, err := pkg.GetTokenBalance(client, account, "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48")
 			if err == nil {
-				usdcPrice, err := pkg.Quote("USDC", "USD")
-				if err != nil {
-					panic(err)
-				}
 				usdcValue := new(big.Float).Mul(big.NewFloat(usdcPrice), usdcBal)
 				addressValue = new(big.Float).Add(addressValue, usdcValue)
 				fmt.Printf("	- USDC Balance: %f    -> Value: %f\n", usdcBal, usdcValue)
@@ -152,10 +155,6 @@ func main() {
 
 			daiBal, err := pkg.GetTokenBalance(client, account, "0x6B175474E89094C44Da98b954EedeAC495271d0F")
 			if err == nil {
-				daiPrice, err := pkg.Quote("DAI", "USD")
-				if err != nil {
-					panic(err)
-				}
 				daiValue := new(big.Float).Mul(big.NewFloat(daiPrice), daiBal)
 				addressValue = new(big.Float).Add(addressValue, daiValue)
 				fmt.Printf("	- DAI Balance: %f    -> Value: %f\n", daiBal, daiValue)
