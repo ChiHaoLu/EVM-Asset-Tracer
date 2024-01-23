@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/big"
 	"os"
+	"bufio"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -35,6 +36,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	report, err := os.Create("BalanceResult.md")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer report.Close()
+	writer := bufio.NewWriter(report)
+	defer writer.Flush() 
+	writer.WriteString("| Chain | Address | ETH Balance | USDT Balance | USDC Balance | DAI Balance | MATIC Balance | BNB Balance | Value |\n")
+	writer.WriteString("|-------|---------|-------------|--------------|--------------|-------------|---------------|-------------|---------------|\n")
+
 	allValue := new(big.Float)
 	for i := 0; i < len(data.Chain); i++ {
 		chainValue := new(big.Float)
@@ -44,7 +55,14 @@ func main() {
 			log.Fatal(err)
 		}
 
-		client, err := ethclient.Dial(data.Chain[i] + os.Getenv("API_KEY"))
+		var url string
+		if chainName == "bsc" {
+			url = data.Chain[i]
+		} else {
+			url = data.Chain[i] + os.Getenv("API_KEY")
+		}
+
+		client, err := ethclient.Dial(url)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -101,6 +119,46 @@ func main() {
 
 			fmt.Println("	- Address Value:", addressValue)
 			chainValue = new(big.Float).Add(addressValue, chainValue)
+
+			zeroValue := new(big.Float)
+			if nativeTokenName == "ETH"{
+				fmt.Fprintf(writer, "| %s | %s | %f | %f | %f | %f | %f | %f | %f |\n",
+					chainName,
+					account,
+					nativeBal,
+					usdtBal,
+					usdcBal,
+					daiBal,
+					zeroValue,
+					zeroValue,
+					addressValue,
+				)
+			} else if nativeTokenName == "MATIC" {
+				fmt.Fprintf(writer, "| %s | %s | %f | %f | %f | %f | %f | %f | %f |\n",
+					chainName,
+					account,
+					zeroValue,
+					usdtBal,
+					usdcBal,
+					daiBal,
+					nativeBal,
+					zeroValue,
+					addressValue,
+				)
+			} else if nativeTokenName == "BNB"{
+				fmt.Fprintf(writer, "| %s | %s | %f | %f | %f | %f | %f | %f | %f |\n",
+					chainName,
+					account,
+					zeroValue,
+					usdtBal,
+					usdcBal,
+					daiBal,
+					zeroValue,
+					nativeBal,
+					addressValue,
+				)
+			}
+			
 		}
 		fmt.Printf("Chain Value:%f\n\n", chainValue)
 		allValue = new(big.Float).Add(allValue, chainValue)
