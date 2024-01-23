@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"math/big"
 	"strings"
-
-	"github.com/ethereum/go-ethereum/common"
 )
 
 func ConvertHexToDecimal(hexValue string) *big.Float {
@@ -52,7 +50,7 @@ func ExtractNetwork(url string) (string, string, error) {
 
 func ProduceMDTable(writer *bufio.Writer,
 	chainName string,
-	account common.Address,
+	account string,
 	nativeBal *big.Float,
 	usdtBal *big.Float,
 	usdcBal *big.Float,

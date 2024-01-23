@@ -95,10 +95,22 @@ func main() {
 					fmt.Printf("	- USDC Balance: %f    -> Value: %f\n", usdcBal, usdcValue)
 				}
 
-				// DAI "0x00da114221cb83fa859dbdb4c44beeaa0bb37c7537ad5ae66fe5e0efd20e6eb3"
+				daiBal, err := pkg.GetSNTokenBalanceAndValue(url, "0x00da114221cb83fa859dbdb4c44beeaa0bb37c7537ad5ae66fe5e0efd20e6eb3", account, "balanceOf")
+				if err == nil {
+					daiValue := new(big.Float).Mul(big.NewFloat(daiPrice), daiBal)
+					addressValue = new(big.Float).Add(addressValue, daiValue)
+					fmt.Printf("	- DAI Balance: %f    -> Value: %f\n", daiBal, daiValue)
+				}
 				chainValue = new(big.Float).Add(addressValue, chainValue)
+				pkg.ProduceMDTable(writer, chainName, account, nativeBal, nil, usdcBal, daiBal, addressValue)
 			}
 			fmt.Printf("Chain Value:%f\n\n", chainValue)
+			allValue = new(big.Float).Add(allValue, chainValue)
+			fmt.Fprintf(writer, "| %s | %s |  |  |  | |  |  | %f |\n",
+				chainName,
+				"Total",
+				chainValue,
+			)
 			continue
 		}
 
@@ -128,7 +140,7 @@ func main() {
 				var nativePrice float64
 				if nativeTokenName == "ETH" {
 					nativePrice = ethPrice
-				} else{
+				} else {
 					nativePrice, err = pkg.Quote(nativeTokenName, "USD")
 				}
 				if err != nil {
@@ -162,8 +174,7 @@ func main() {
 
 			fmt.Println("	- Address Value:", addressValue)
 			chainValue = new(big.Float).Add(addressValue, chainValue)
-
-			pkg.ProduceMDTable(writer, chainName, account, nativeBal, usdtBal, usdcBal, daiBal, addressValue)
+			pkg.ProduceMDTable(writer, chainName, account.String(), nativeBal, usdtBal, usdcBal, daiBal, addressValue)
 		}
 		fmt.Printf("Chain Value:%f\n\n", chainValue)
 		allValue = new(big.Float).Add(allValue, chainValue)
