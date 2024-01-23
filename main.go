@@ -120,48 +120,19 @@ func main() {
 			fmt.Println("	- Address Value:", addressValue)
 			chainValue = new(big.Float).Add(addressValue, chainValue)
 
-			zeroValue := new(big.Float)
-			if nativeTokenName == "ETH"{
-				fmt.Fprintf(writer, "| %s | %s | %f | %f | %f | %f | %f | %f | %f |\n",
-					chainName,
-					account,
-					nativeBal,
-					usdtBal,
-					usdcBal,
-					daiBal,
-					zeroValue,
-					zeroValue,
-					addressValue,
-				)
-			} else if nativeTokenName == "MATIC" {
-				fmt.Fprintf(writer, "| %s | %s | %f | %f | %f | %f | %f | %f | %f |\n",
-					chainName,
-					account,
-					zeroValue,
-					usdtBal,
-					usdcBal,
-					daiBal,
-					nativeBal,
-					zeroValue,
-					addressValue,
-				)
-			} else if nativeTokenName == "BNB"{
-				fmt.Fprintf(writer, "| %s | %s | %f | %f | %f | %f | %f | %f | %f |\n",
-					chainName,
-					account,
-					zeroValue,
-					usdtBal,
-					usdcBal,
-					daiBal,
-					zeroValue,
-					nativeBal,
-					addressValue,
-				)
-			}
-			
+			utils.ProduceMDTable(writer, chainName, account, nativeBal, usdtBal, usdcBal, daiBal, addressValue)
 		}
 		fmt.Printf("Chain Value:%f\n\n", chainValue)
 		allValue = new(big.Float).Add(allValue, chainValue)
+		fmt.Fprintf(writer, "| %s | %s |  |  |  | |  |  | %f |\n",
+			chainName,
+			"Total",
+			chainValue,
+		)
 	}
 	fmt.Printf("All Value:%f\n", allValue)
+	fmt.Fprintf(writer, "| %s | |  |  |  | |  |  | %f |\n",
+		"Total",
+		allValue,
+	)
 }
