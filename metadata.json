@@ -1,7 +1,8 @@
 {
     "address": [
         "0x2b83c71a59b926137d3e1f37ef20394d0495d72d",
-        "0x189C92f28047c979cA2D17C13e3A12963EB1b8B4"
+        "0x189C92f28047c979cA2D17C13e3A12963EB1b8B4",
+        "0xd837854e837F7011300fB422748fb40Cc4D3E8bc"
     ],
     "chain": [
         "https://mainnet.infura.io/v3/",
