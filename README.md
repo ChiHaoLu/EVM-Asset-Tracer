@@ -1,4 +1,4 @@
-# EVM Compatible Asset Tracer
+# EVM Compatible Chains and StarkNet Asset Tracer
 
 ## Environment
 - Go: 1.21.0
@@ -12,6 +12,7 @@
 - Optimism
 - Arbitrum
 - BSC
+- StarkNet
 
 ### Token
 
@@ -22,7 +23,7 @@
   - MATIC
   - BNB
 - ERC-20
-  - WETH
+  - ~WETH~
   - USDT
   - USDC
   - DAI
@@ -102,6 +103,7 @@ abigen --bin=bin/TetherToken.bin --abi=build/TetherToken.abi --pkg=usdt --out=us
 
 Run below commands to get the accounts' total balance
 ```
+$ go get <gihub.com/repo_org/repo_name>
 $ go mod download
 $ go run *.go
 ```
