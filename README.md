@@ -18,12 +18,12 @@
 
 - Native Token
   - ETH
-  - OP
-  - ARB
   - MATIC
   - BNB
 - ERC-20
   - ~WETH~
+  - ~OP~
+  - ~ARB~
   - USDT
   - USDC
   - DAI

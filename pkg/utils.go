@@ -70,6 +70,9 @@ func ProduceMDTable(writer *bufio.Writer,
 	if daiBal == nil {
 		daiBal = zeroValue
 	}
+	if addressValue == nil {
+		addressValue = zeroValue
+	}
 
 	if chainName == "polygon" {
 		fmt.Fprintf(writer, "| %s | %s | %f | %f | %f | %f | %f | %f | %f |\n",
