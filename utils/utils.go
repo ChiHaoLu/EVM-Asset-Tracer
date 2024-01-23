@@ -9,6 +9,15 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
+func ConvertHexToDecimal(hexValue string) *big.Float {
+	intValue, success := new(big.Int).SetString(hexValue[2:], 16)
+	if !success {
+		return nil
+	}
+	floatValue := new(big.Float).SetInt(intValue)
+	return floatValue
+}
+
 func Filter[T any](elems []T, filter func(elem T) bool) []T {
 	var res []T
 	for _, elem := range elems {

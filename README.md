@@ -106,9 +106,5 @@ $ go mod download
 $ go run *.go
 ```
 
-## TODO
-
-- Integrate Docker
-
 ## Appendic
 1. `eth_getBalance` only returns the balance of the native chain currency (ex: ETH for Ethereum or Matic for Polygon) and does not include any ERC20 token balances for the given address. [ref.](https://docs.alchemy.com/reference/eth-getbalance-polygon)
