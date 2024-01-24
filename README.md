@@ -103,7 +103,7 @@ abigen --bin=bin/TetherToken.bin --abi=build/TetherToken.abi --pkg=usdt --out=us
 
 Run below commands to get the accounts' total balance
 ```
-$ go get <gihub.com/repo_org/repo_name>
+$ go get <gihub.com/repo_org/repo_name> // If you want to add new package
 $ go mod download
 $ go run *.go
 ```

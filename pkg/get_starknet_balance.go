@@ -49,7 +49,5 @@ func GetSNTokenBalanceAndValue(clientUrl string, tokenAddress string, accountAdd
 		return nil, err
 	}
 
-	floatValue := new(big.Float).SetInt(utils.FeltToBigInt(callResp[0]))
-	floatValue.Quo(floatValue, new(big.Float).SetInt(new(big.Int).Exp(big.NewInt(10), utils.FeltToBigInt(getDecimalsResp[0]), nil)))
-	return floatValue, nil
+	return FeltToFloat(callResp[0], utils.FeltToBigInt(getDecimalsResp[0])), nil
 }

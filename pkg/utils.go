@@ -5,7 +5,16 @@ import (
 	"fmt"
 	"math/big"
 	"strings"
+
+	"github.com/NethermindEth/juno/core/felt"
+	"github.com/NethermindEth/starknet.go/utils"
 )
+
+func FeltToFloat(feltNumber *felt.Felt, decimal *big.Int) *big.Float {
+	floatValue := new(big.Float).SetInt(utils.FeltToBigInt(feltNumber))
+	floatValue.Quo(floatValue, new(big.Float).SetInt(new(big.Int).Exp(big.NewInt(10), decimal, nil)))
+	return floatValue
+}
 
 func ConvertHexToDecimal(hexValue string) *big.Float {
 	intValue, success := new(big.Int).SetString(hexValue[2:], 16)
