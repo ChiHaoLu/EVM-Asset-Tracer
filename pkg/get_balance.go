@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math"
 	"math/big"
 	"net/http"
@@ -56,6 +56,7 @@ func GetTokenBalance(client *ethclient.Client, account common.Address, tokenAddr
 	return value, nil
 }
 
+// / @dev deprecated function
 func GetBNBBalance(account common.Address) (*big.Float, error) {
 	const rpcEndpoint = "https://bsc-dataseed.binance.org/"
 
@@ -85,7 +86,7 @@ func GetBNBBalance(account common.Address) (*big.Float, error) {
 	defer resp.Body.Close()
 
 	// Read the response body
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 
 		return nil, err

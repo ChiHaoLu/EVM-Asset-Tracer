@@ -11,10 +11,11 @@ import (
 	ethrpc "github.com/ethereum/go-ethereum/rpc"
 )
 
+/// @dev the token contract must follow the ERC-20 interface in StarkNet
 func GetSNTokenBalanceAndValue(clientUrl string, tokenAddress string, accountAddress string, contractMethod string) (*big.Float, error) {
 	c, err := ethrpc.DialContext(context.Background(), clientUrl)
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to the client, did you specify the url in the .env.mainnet?")
+		return nil, fmt.Errorf("failed to connect to the client, did you specify the url?")
 	}
 	clientv02 := rpc.NewProvider(c)
 	tokenAddressInFelt, err := utils.HexToFelt(tokenAddress)

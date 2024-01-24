@@ -36,6 +36,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	fiat := os.Getenv("FIAT")
+
 	report, err := os.Create("BalanceResult.md")
 	if err != nil {
 		log.Fatal(err)
@@ -43,24 +45,26 @@ func main() {
 	defer report.Close()
 	writer := bufio.NewWriter(report)
 	defer writer.Flush()
+	writer.WriteString("# Token Balance")
+	writer.WriteString("> Fiat: " + fiat)
 	writer.WriteString("| Chain | Address | ETH Balance | USDT Balance | USDC Balance | DAI Balance | MATIC Balance | BNB Balance | Value |\n")
 	writer.WriteString("|-------|---------|-------------|--------------|--------------|-------------|---------------|-------------|---------------|\n")
 
 	allValue := new(big.Float)
 
-	ethPrice, err := pkg.Quote("ETH", "USD")
+	ethPrice, err := pkg.Quote("ETH", fiat)
 	if err != nil {
 		panic(err)
 	}
-	usdcPrice, err := pkg.Quote("USDC", "USD")
+	usdcPrice, err := pkg.Quote("USDC", fiat)
 	if err != nil {
 		panic(err)
 	}
-	usdtPrice, err := pkg.Quote("USDT", "USD")
+	usdtPrice, err := pkg.Quote("USDT", fiat)
 	if err != nil {
 		panic(err)
 	}
-	daiPrice, err := pkg.Quote("DAI", "USD")
+	daiPrice, err := pkg.Quote("DAI", fiat)
 	if err != nil {
 		panic(err)
 	}
@@ -141,7 +145,7 @@ func main() {
 				if nativeTokenName == "ETH" {
 					nativePrice = ethPrice
 				} else {
-					nativePrice, err = pkg.Quote(nativeTokenName, "USD")
+					nativePrice, err = pkg.Quote(nativeTokenName, fiat)
 				}
 				if err != nil {
 					panic(err)
