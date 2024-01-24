@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"log"
 	"math/big"
@@ -12,28 +11,14 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/joho/godotenv"
 
+	"github.com/ChiHaoLu/EVM-Asset-Tracer/constant"
 	"github.com/ChiHaoLu/EVM-Asset-Tracer/pkg"
 )
-
-type Metadata struct {
-	Address []string `json:"address"`
-	Chain   []string `json:"chain"`
-}
 
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("err loading: %v", err)
-	}
-
-	var data Metadata
-	file, err := os.ReadFile("metadata.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = json.Unmarshal(file, &data)
-	if err != nil {
-		log.Fatal(err)
 	}
 
 	fiat := os.Getenv("FIAT")
@@ -69,18 +54,18 @@ func main() {
 		panic(err)
 	}
 
-	for i := 0; i < len(data.Chain); i++ {
+	for i := 0; i < constant.CHAIN_LEN; i++ {
 		chainValue := new(big.Float)
-		chainName, nativeTokenName, err := pkg.ExtractNetwork(data.Chain[i])
+		chainName, nativeTokenName, err := pkg.ExtractNetwork(constant.GetCahinUrlPrefixFromArray(i))
 		fmt.Println("Chain: ", chainName)
 		if err != nil {
 			log.Fatal(err)
 		}
 		if chainName == "starknet" {
-			url := data.Chain[i] + os.Getenv("API_KEY")
-			for j := 0; j < len(data.Address); j++ {
+			url := constant.GetCahinUrlPrefixFromArray(i) + os.Getenv("API_KEY")
+			for j := 0; j < constant.ADDRESS_LEN; j++ {
 				addressValue := new(big.Float)
-				account := data.Address[j]
+				account := constant.GetAddressFromArray(j)
 				if len(account) < 60 {
 					continue
 				}
@@ -120,9 +105,9 @@ func main() {
 
 		var url string
 		if chainName == "bsc" {
-			url = data.Chain[i]
+			url = constant.GetCahinUrlPrefixFromArray(i)
 		} else {
-			url = data.Chain[i] + os.Getenv("API_KEY")
+			url = constant.GetCahinUrlPrefixFromArray(i) + os.Getenv("API_KEY")
 		}
 
 		client, err := ethclient.Dial(url)
@@ -131,12 +116,12 @@ func main() {
 		}
 		defer client.Close()
 
-		for j := 0; j < len(data.Address); j++ {
-			if len(data.Address[j]) > 60 {
+		for j := 0; j < constant.ADDRESS_LEN; j++ {
+			if len(constant.GetAddressFromArray(j)) > 60 {
 				continue
 			}
 			addressValue := new(big.Float)
-			account := common.HexToAddress(data.Address[j])
+			account := common.HexToAddress(constant.GetAddressFromArray(j))
 			fmt.Println("    Account: ", account)
 
 			nativeBal, err := pkg.GetNativeTokenBalance(client, account)
@@ -146,9 +131,9 @@ func main() {
 					nativePrice = ethPrice
 				} else {
 					nativePrice, err = pkg.Quote(nativeTokenName, fiat)
-				}
-				if err != nil {
-					panic(err)
+					if err != nil {
+						panic(err)
+					}
 				}
 				nativeValue := new(big.Float).Mul(big.NewFloat(nativePrice), nativeBal)
 				addressValue = new(big.Float).Add(addressValue, nativeValue)
