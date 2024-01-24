@@ -30,8 +30,8 @@ func main() {
 	defer report.Close()
 	writer := bufio.NewWriter(report)
 	defer writer.Flush()
-	writer.WriteString("# Token Balance\n")
-	writer.WriteString("> Fiat: " + fiat + "\n")
+	writer.WriteString("# Token Balance\n\n")
+	writer.WriteString("> Fiat: " + fiat + "\n\n")
 	writer.WriteString("| Chain | Address | ETH Balance | USDT Balance | USDC Balance | DAI Balance | MATIC Balance | BNB Balance | Value |\n")
 	writer.WriteString("|-------|---------|-------------|--------------|--------------|-------------|---------------|-------------|---------------|\n")
 
