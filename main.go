@@ -53,6 +53,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	strkPrice, err := pkg.Quote("STRK", fiat)
+	if err != nil {
+		panic(err)
+	}
 
 	for i := 0; i < constant.CHAIN_LEN; i++ {
 		chainValue := new(big.Float)
@@ -89,6 +93,13 @@ func main() {
 					daiValue := new(big.Float).Mul(big.NewFloat(daiPrice), daiBal)
 					addressValue = new(big.Float).Add(addressValue, daiValue)
 					fmt.Printf("	- DAI Balance: %f    -> Value: %f\n", daiBal, daiValue)
+				}
+
+				strkBal, err := pkg.GetSNTokenBalanceAndValue(url, "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d", account, "balanceOf")
+				if err == nil {
+					strkValue := new(big.Float).Mul(big.NewFloat(strkPrice), strkBal)
+					addressValue = new(big.Float).Add(addressValue, strkValue)
+					fmt.Printf("	- STRK Balance: %f    -> Value: %f\n", strkBal, strkValue)
 				}
 				chainValue = new(big.Float).Add(addressValue, chainValue)
 				pkg.ProduceMDTable(writer, chainName, account, nativeBal, nil, usdcBal, daiBal, addressValue)
